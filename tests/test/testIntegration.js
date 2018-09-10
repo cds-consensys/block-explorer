@@ -10,7 +10,6 @@ contract('ExploreTest', ([acc1, acc2, acc3, ...rest]) => {
 
   it('should get a database object from explorer', async () => {
     const db = await blockQuery(args)
-    console.log(db)
     assert.isTrue('totalTransferred' in db)
   })
 })

@@ -32,7 +32,48 @@ Clone the repo and build
  $ npm install
  ```
 
-# Testing thoughts
+# Environment variables
+
+Infura endpoints should be configured as part of the environment. Get an
+endpoint by visiting https://infura.io/
+
+```sh
+export BKX_RINKEBY="https://rinkeby.infura.io/v3/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+export BKX_MAINNET="https://mainnet.infura.io/v3/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+```
+
+Tip: put the two exports in a file `secrets.env` and `source` it to get the
+export in the environment.
+
+```sh
+$ source ./secrets.env
+```
+
+# Testing
+
+The tests leverage `truffle develop's` test blockchain. Run them by
+going into the `tests` folder and enter the `trufle develop console` and
+invoking `test`
+
+```sh
+$ cd tests
+$ truffle develop
+
+truffle(develop)> test
+Compiling ./contracts/ExploreTest.sol...
+Compiling ./contracts/Migrations.sol...
+
+
+  Contract: ExploreTest
+    ✓ should get a database object from explorer (118ms)
+
+  1 passing (136ms)
+
+truffle(develop)>
+```
+
+
+## Thoughts
 I'm still researching best practices and took this as an opportunity to
 investigate the developer flow as much as developing the simple blockchain
 explorer. The only guide I have is to structure the explorer as an API that both
@@ -69,6 +110,8 @@ Options:
 ```
 
 ## Examples
+
+** Don't forget to set your environment variables! **
 
 1. Explore rinkeby starting 10 blocks from `latest`
    ```sh
