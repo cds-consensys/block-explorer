@@ -1,4 +1,4 @@
-# block-explorer
+# Block-explorer
 
 This block explorer is a command line tool to display ad-hoc blockchain data
 over a given range of blocks. In that range it will answer basic account
@@ -10,13 +10,18 @@ questions:
 4. A list of contract addresses that participated transactions
 5. Pct of Ether sent grouped by account type
 6. Pct of Ether received transactions grouped by account type
-7. How many contracts were created
+7. How many contracts were created (seems to work on ganache networks, but not
+   mainnet nor rinkeby. Haven't tested the other testnets)
 
+# Demo
+An asciinema screencast is available here: https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg
 
-## Concerns
+## Concerns & missed goals.
  - Transfers from contracts to another address are initiated by an Externally
      Owned Account and I'm not sure how to access the subsequent(embedded?)
      transfers that may be initiated just from web3's api.
+ - Different behavior between ganache* vs mainnet and rinkeby for detecting when
+     a contract is created.
 
 # Tools
 
