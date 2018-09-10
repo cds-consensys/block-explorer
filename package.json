@@ -21,8 +21,10 @@
   },
   "homepage": "https://github.com/cds-consensys/block-explorer#readme",
   "dependencies": {
+    "keccak": "^1.4.0",
     "neodoc": "^2.0.2",
     "promisify": "0.0.3",
+    "rlp": "^2.1.0",
     "web3": "^0.20.6"
   }
 }
