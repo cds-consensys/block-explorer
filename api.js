@@ -12,7 +12,9 @@ const NETWORKS = {
 
 // https://ethereum.stackexchange.com/questions/19092/why-was-rlp-chosen-as-the-low-level-protocol-encoding-algorithm
 // https://ethereum.stackexchange.com/a/46960/30050
-const getContractAddress = (sender, nonce) => {
+const getContractAddress = web3 => (sender, nonce) => {
+  // if nonce is zero, then use zero, otherwise convert to hex literal
+  const hexNonce = nonce === 0 ? 0 : web3.toHex(nonce)
   const input_arr = [sender, nonce]
   const rlp_encoded = rlp.encode(input_arr)
 
@@ -36,7 +38,6 @@ module.exports = args => {
     getCode,
     getBlock,
     toBigNumber,
-    toHex: web3.toHex,
-    getContractAddress
+    getContractAddress: getContractAddress(web3)
   }
 }
