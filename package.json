@@ -2,7 +2,7 @@
   "name": "block-explorer",
   "version": "1.0.0",
   "description": "This block explorer is a command line tool to display ad-hoc blockchain data over a given range of blocks. In that range it will answer basic account questions:",
-  "main": "./src/index.js",
+  "main": "./src/cli.js",
   "directories": {
     "test": "tests"
   },
