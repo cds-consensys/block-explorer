@@ -152,10 +152,15 @@ const blockQuery = async args => {
   }
 
   do {
-    const block = await api.getBlock(blockNum++, true)
-    logblocks && console.log('block', JSON.stringify(block, null, 2))
+    try {
+      const block = await api.getBlock(blockNum++, true)
+      logblocks && console.log('block', JSON.stringify(block, null, 2))
 
-    await parseTransactions(block.transactions, db, api, options)
+      await parseTransactions(block.transactions, db, api, options)
+    } catch (error) {
+      console.error(error)
+      return { error }
+    }
   } while (blockNum <= endBlock)
 
   args.hasConsole &&
