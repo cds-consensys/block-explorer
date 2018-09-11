@@ -14,7 +14,8 @@ questions:
    mainnet nor rinkeby. Haven't tested the other testnets)
 
 # Demo
-An asciinema screencast is available here: https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg
+[![asciicast](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg.png)](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg)
+
 
 ## Concerns & missed goals.
  - Transfers from contracts to another address are initiated by an Externally
