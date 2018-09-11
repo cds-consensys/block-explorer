@@ -2,12 +2,15 @@
   "name": "block-explorer",
   "version": "1.0.0",
   "description": "This block explorer is a command line tool to display ad-hoc blockchain data over a given range of blocks. In that range it will answer basic account questions:",
-  "main": "bkx.js",
+  "main": "./src/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "bkx": "./src/cli.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +18,7 @@
   },
   "keywords": [],
   "author": "Amal Sudama <cds.sudama@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cds-consensys/block-explorer/issues"
   },

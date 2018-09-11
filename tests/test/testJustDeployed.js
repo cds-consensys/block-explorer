@@ -1,5 +1,5 @@
 // const Actor = artifacts.require('ExploreTest')
-const { blockQuery } = require('../../explorer')
+const { blockQuery } = require('../../src/explorer')
 
 contract('Thats just deployed', ([acc1, acc2, acc3, ...rest]) => {
   // let actor

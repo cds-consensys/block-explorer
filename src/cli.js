@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 const { blockQuery } = require('./explorer')
 const report = require('./report')
 
@@ -5,7 +6,7 @@ const neodoc = require('neodoc')
 const version = '0.0.1'
 
 const doc = `
-Blockchain explorer
+Blockchain explorer tool to study that ETH velocity.
 
 Usage:
   bkx STARTBLOCK ENDBLOCK --net=NETWORK [--logtrans --logblocks --logcontracts]

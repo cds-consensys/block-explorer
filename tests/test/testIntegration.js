@@ -1,6 +1,5 @@
 const Actor = artifacts.require('ExploreTest')
-const { blockQuery } = require('../../explorer')
-
+const { blockQuery } = require('../../src/explorer')
 contract('ExploreTest', ([acc1, acc2, acc3, ...rest]) => {
   const args = {
     FROMCURRENTBLOCK: 1000,
