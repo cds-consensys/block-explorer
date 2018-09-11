@@ -23,36 +23,30 @@ const parseTransactions = async (
     const { from: accFrom, to: accTo, value, nonce } = tx
     const header = `Blk[${tx.blockNumber}]:tx(${tx.transactionIndex})`
 
+    // On Mainnet and Rinkeby, contract creation is detected when
+    // to: is null.
+    //
+    // This is different from ganache which sets to: field as '0x0'
+    //
+    // Todo: pass current network to this function so this expression is
+    // more accurate:
+    // if (network in [mainnet, rinkeby] && accTo === null) || (network is ganache && accTo === '0x0')...
+    //
+    if (accTo === null || accTo === '0x0') {
+      const contract = api.getContractAddress(accFrom, nonce)
+      if (logcontracts) {
+        console.log(`${header}: Contract created: ${contract}`)
+      }
+      db.contractsCreated.push(contract)
+      continue
+    }
     // Todo: Investigate how to determine when a contract sends ether in a transaction
     // what does the transaction look like?
     //
     if (value.isZero()) {
-      if (accTo === '0x0' || accTo === '0x') {
-        // Todo: Contract creation. This seems to work on local with ganache,
-        // need test data to see what it is on main and other networks
-        //
-        // on localnet with ganache 0x0 !== 0x00
-        const hexNonce = nonce === 0 ? 0x00 : api.toHex(nonce)
-        const contract = api.getContractAddress(accFrom, hexNonce)
-        if (logcontracts) {
-          /* console.log('block', tx.blockNumber)
-           * console.log('sender, nonce', accFrom, hexNonce)
-           * console.log(
-           *   'contract address: ',
-           *   api.getContractAddress(accFrom, hexNonce)
-           * ) */
-          console.log(`${header}: Contract created: ${contract}`)
-        }
-        db.contractsCreated.push(contract)
-      }
-
       // No ETH transfer detected; short-circuit loop
       continue
     }
-
-    // Todo: Not sure what circumstances transaction.to is null
-    // No ETH transfer detected; short-circuit loop
-    if (accTo === null) continue
 
     await addAccount(accFrom, db, api)
     await addAccount(accTo, db, api)
