@@ -74,28 +74,25 @@ const parseTransactions = async (
   }
 }
 
+const percentages = (portion, whole) =>
+  portion
+    .dividedBy(whole)
+    .times(100)
+    .toFixed(2)
+    .toString(10)
+
 const tallySummary = db => {
-  db.pctSentByContracts = db.totalOutContracts
-    .dividedBy(db.totalTransferred)
-    .times(100)
-    .toString(10)
+  db.pctSentByContracts = percentages(db.totalOutContracts, db.totalTransferred)
+  db.pctSentByExternals = percentages(db.totalOutExternals, db.totalTransferred)
 
-  db.pctSentByExternals = db.totalOutExternals
-    .dividedBy(db.totalTransferred)
-    .times(100)
-    .toString(10)
-
-  db.pctReceivedByContracts = db.totalInContracts
-    .dividedBy(db.totalTransferred)
-    .times(100)
-    .toFixed(2)
-    .toString(10)
-
-  db.pctReceivedByExternals = db.totalInExternals
-    .dividedBy(db.totalTransferred)
-    .times(100)
-    .toFixed(2)
-    .toString(10)
+  db.pctReceivedByContracts = percentages(
+    db.totalInContracts,
+    db.totalTransferred
+  )
+  db.pctReceivedByExternals = percentages(
+    db.totalInExternals,
+    db.totalTransferred
+  )
 }
 
 const getBlockRange = async (args, api) => {
