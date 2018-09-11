@@ -13,15 +13,17 @@ const NETWORKS = {
 // https://ethereum.stackexchange.com/questions/19092/why-was-rlp-chosen-as-the-low-level-protocol-encoding-algorithm
 // https://ethereum.stackexchange.com/a/46960/30050
 const getContractAddress = web3 => (sender, nonce) => {
-  // if nonce is zero, then use zero, otherwise convert to hex literal
-  const hexNonce = nonce === 0 ? 0 : web3.toHex(nonce)
-  const input_arr = [sender, nonce]
-  const rlp_encoded = rlp.encode(input_arr)
+  // Use zero if nonce is naught, otherwise otherwise encoded nonce
+  // OR generated contract address for nonze zero is will not match
+  // what the EVM generates.
+  //
+  const input = [sender, nonce === 0 ? nonce : web3.toHex(nonce)]
+  const rlpEncoded = rlp.encode(input)
 
-  const contract_address_long = keccak('keccak256')
-    .update(rlp_encoded)
+  return keccak('keccak256')
+    .update(rlpEncoded)
     .digest('hex')
-  return contract_address_long.substring(24)
+    .substring(24)
 }
 
 module.exports = args => {
