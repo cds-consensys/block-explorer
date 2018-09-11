@@ -17,7 +17,7 @@ questions:
 [![asciicast](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg.png)](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg)
 
 
-## Concerns & missed goals.
+## Concerns
  - Transfers from contracts to another address are initiated by an Externally
      Owned Account and I'm not sure how to access the subsequent(embedded?)
      transfers that may be initiated just from web3's api.
@@ -73,6 +73,33 @@ $ source ./secrets.env
 
 # Testing
 
+## Mocha tests
+
+Some tests require mainnet or rinkeby access.
+__Don't forget to source your secrets.env file to set infura endpoints!__
+
+```sh
+$ npm test
+
+> block-explorer@1.0.0 test /Volumes/Sofai/dev/consensys/interview/trufflesuite/block-explorer
+> mocha --reporter spec './src/*.test.js'
+
+  explorer
+    rinkeby tests verify range [2971555, 2971556]
+      ✓ calculates the total transferred ETH
+      ✓ counts the number of contracts created
+      for Externally Owned Accounts
+        ✓ calculates the total ETH received
+        ✓ calculates the total ETH sent
+      for Contract Accounts
+        ✓ calculates the total ETH received
+        ✓ calculates the total ETH sent
+
+
+  6 passing (690ms)
+```
+
+## Truffle tests
 The tests leverage `truffle develop's` test blockchain. Run them by
 going into the `tests` folder and enter the `trufle develop console` and
 invoking `test`
@@ -110,8 +137,8 @@ __Unknowns__
 
 This project utilizes [neodoc](https://felixschl.github.io/neodoc/#/?_k=jq4bnh),
 a node implementation of [DOCOPT](http://docopt.org) allowing you make beautiful
-commanline interfaces adhering to POSIX conventions that have been used for
-decades in help messages and man pages for describing a program's interface.
+commands adhering to POSIX conventions that have been used for decades in help
+messages and man pages for describing a program's interface.
 
 ```sh
 
