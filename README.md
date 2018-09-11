@@ -20,8 +20,13 @@ An asciinema screencast is available here: https://asciinema.org/a/iW92M7R2NAlaK
  - Transfers from contracts to another address are initiated by an Externally
      Owned Account and I'm not sure how to access the subsequent(embedded?)
      transfers that may be initiated just from web3's api.
+
  - Different behavior between ganache* vs mainnet and rinkeby for detecting when
-     a contract is created.
+     a contract is created. According to
+     https://ethereum.stackexchange.com/a/29703/30050 Contract creation is
+     detected when the transaction's `to` field is null, however on ganache, the
+     `to` field is '0x0'. The implication is there could be other differences
+     depending on network and should be considered when processing.
 
 # Tools
 
