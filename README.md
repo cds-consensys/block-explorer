@@ -26,8 +26,11 @@ questions:
      a contract is created. According to
      https://ethereum.stackexchange.com/a/29703/30050 Contract creation is
      detected when the transaction's `to` field is null, however on ganache, the
-     `to` field is '0x0'. The implication is there could be other differences
+     `to` field is '0x0'. The implication is there may be other differences
      depending on network and should be considered when processing.
+     - This is avoided by examining the transactionReceipt, which contains
+       the created contract address if one was created. It also informs whether
+       the transaction was accepted or rejected (reverted)
 
 # Tools
 
