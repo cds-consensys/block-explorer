@@ -10,6 +10,16 @@ const addAccount = async (account, db, api) => {
   }
 }
 
+const getTransactionResults = async (hash, api, logtrans) => {
+  const receipt = await api.getTransactionReceipt(hash)
+  const { status, contractAddress } = receipt
+  logtrans && console.log(receipt)
+  // mainnet and rinkeby use status '0x1'
+  // ganache uses '0x01'
+  const success = status === '0x01' || status === '0x1'
+  return { success, contractAddress }
+}
+
 const parseTransactions = async (
   trans,
   db,
@@ -20,26 +30,23 @@ const parseTransactions = async (
   trans.sort(compareAscending)
 
   for (let tx of trans) {
-    const { from: accFrom, to: accTo, value, nonce } = tx
+    const { from: accFrom, to: accTo, value, nonce, hash } = tx
     const header = `Blk[${tx.blockNumber}]:tx(${tx.transactionIndex})`
 
-    // On Mainnet and Rinkeby, contract creation is detected when
-    // to: is null.
-    //
-    // This is different from ganache which sets to: field as '0x0'
-    //
-    // Todo: pass current network to this function so this expression is
-    // more accurate:
-    // if (network in [mainnet, rinkeby] && accTo === null) || (network is ganache && accTo === '0x0')...
-    //
-    if (accTo === null || accTo === '0x0') {
-      const contract = api.getContractAddress(accFrom, nonce)
+    const txResult = await getTransactionResults(hash, api, logtrans)
+    const { success, contractAddress } = txResult
+
+    if (!success) continue
+
+    if (contractAddress) {
+      db.contractsCreated.push(contractAddress)
+
       if (logcontracts) {
-        console.log(`${header}: Contract created: ${contract}`)
+        console.log(`${header}: Contract address created: ${contractAddress}`)
       }
-      db.contractsCreated.push(contract)
       continue
     }
+
     // Todo: Investigate how to determine when a contract sends ether in a transaction
     // what does the transaction look like?
     //

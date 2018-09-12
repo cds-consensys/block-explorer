@@ -34,12 +34,16 @@ module.exports = args => {
   //
   const getCode = promisify(web3.eth.getCode.bind(web3.eth))
   const getBlock = promisify(web3.eth.getBlock.bind(web3.eth))
+  const getTransactionReceipt = promisify(
+    web3.eth.getTransactionReceipt.bind(web3.eth)
+  )
   const toBigNumber = web3.toBigNumber
 
   return {
     getCode,
     getBlock,
     toBigNumber,
-    getContractAddress: getContractAddress(web3)
+    getContractAddress: getContractAddress(web3),
+    getTransactionReceipt
   }
 }

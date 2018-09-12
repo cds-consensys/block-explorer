@@ -1,7 +1,7 @@
 const Actor = artifacts.require('ExploreTest')
 const { blockQuery } = require('../../src/explorer')
 
-contract('BxTest', ([acc1, acc2, acc3, ...rest]) => {
+contract('TestExplorer blockQuery', ([acc1, acc2, acc3, ...rest]) => {
   let actor
   const args = {
     FROMCURRENTBLOCK: 1000,
@@ -12,7 +12,7 @@ contract('BxTest', ([acc1, acc2, acc3, ...rest]) => {
   before(async () => {
     actor = await Actor.new()
     await actor.send(1000, { from: acc1 })
-    const result = await actor.sendTo(acc2, 500)
+    // const result = await actor.sendTo(acc2, 500)
   })
 
   it('should find the total funds transferred', async () => {
@@ -31,12 +31,9 @@ contract('BxTest', ([acc1, acc2, acc3, ...rest]) => {
   })
 
   it('should find the number of contracts created', async () => {
+    const expectedContracts = 3
     const db = await blockQuery(args)
 
-    // Todo Verify this:
-    // There should be 2 contracts "created" because of the migrations
-    // plus 1 for our actor
-    const expectedContracts = 3
     assert.equal(
       db.contractsCreated.length,
       expectedContracts,

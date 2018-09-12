@@ -10,6 +10,7 @@ describe('explorer', () => {
   //
   describe('rinkeby tests verify range [2971555, 2971556]', () => {
     let db
+    const expectedTotalTransferred = '58052400000000000'
     const args = {
       STARTBLOCK: 2971555,
       ENDBLOCK: 2971556,
@@ -21,8 +22,9 @@ describe('explorer', () => {
     })
 
     it('calculates the total transferred ETH', async () => {
-      const expectedAmount = '58052400000000001'
-      expect(db.totalTransferred.toString(10)).to.equal(expectedAmount)
+      expect(db.totalTransferred.toString(10)).to.equal(
+        expectedTotalTransferred
+      )
     })
 
     it('counts the number of contracts created', () => {
@@ -36,16 +38,18 @@ describe('explorer', () => {
       })
 
       it('calculates the total ETH sent', async () => {
-        const expectedAmount = '58052400000000001'
-        expect(db.totalOutExternals.toString(10)).to.equal(expectedAmount)
+        expect(db.totalOutExternals.toString(10)).to.equal(
+          expectedTotalTransferred
+        )
         expect(db.pctSentByExternals.toString(10)).to.equal('100.00')
       })
     })
 
     describe('for Contract Accounts', () => {
       it('calculates the total ETH received', async () => {
-        const expectedAmount = '58052400000000001'
-        expect(db.totalInContracts.toString(10)).to.equal(expectedAmount)
+        expect(db.totalInContracts.toString(10)).to.equal(
+          expectedTotalTransferred
+        )
         expect(db.pctReceivedByContracts.toString(10)).to.equal('100.00')
       })
 
