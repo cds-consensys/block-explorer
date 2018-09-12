@@ -10,22 +10,24 @@ const addAccount = async (account, db, api) => {
   }
 }
 
-const getTransactionResults = async (hash, api, logtrans) => {
+const getTransactionResults = async (hash, api, options) => {
+  const { hasConsole, logreceipts } = options
   const receipt = await api.getTransactionReceipt(hash)
   const { status, contractAddress } = receipt
-  logtrans && console.log(receipt)
+  if (logreceipts && hasConsole) {
+    console.group('Transaction hash')
+    console.log(JSON.stringify(receipt, null, 2))
+    console.log('*****\n')
+    console.groupEnd()
+  }
   // mainnet and rinkeby use status '0x1'
   // ganache uses '0x01'
   const success = status === '0x01' || status === '0x1'
   return { success, contractAddress }
 }
 
-const parseTransactions = async (
-  trans,
-  db,
-  api,
-  { logtrans, hasConsole, logcontracts }
-) => {
+const parseTransactions = async (trans, db, api, options) => {
+  const { logtrans, hasConsole, logcontracts } = options
   const compareAscending = (a, b) => a.transactionIndex - b.transactionIndex
   trans.sort(compareAscending)
 
@@ -33,7 +35,7 @@ const parseTransactions = async (
     const { from: accFrom, to: accTo, value, nonce, hash } = tx
     const header = `Blk[${tx.blockNumber}]:tx(${tx.transactionIndex})`
 
-    const txResult = await getTransactionResults(hash, api, logtrans)
+    const txResult = await getTransactionResults(hash, api, options)
     const { success, contractAddress } = txResult
 
     if (!success) continue
@@ -129,6 +131,7 @@ const blockQuery = async args => {
   const options = {
     hasConsole: args['hasConsole'],
     logtrans: args['--logtrans'],
+    logreceipts: args['--logreceipts'],
     logcontracts: args['--logcontracts']
   }
 

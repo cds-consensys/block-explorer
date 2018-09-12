@@ -9,16 +9,17 @@ const doc = `
 Blockchain explorer tool to study that ETH velocity.
 
 Usage:
-  bkx STARTBLOCK ENDBLOCK --net=NETWORK [--logtrans --logblocks --logcontracts]
-  bkx FROMCURRENTBLOCK --net=NETWORK [--logtrans --logblocks --logcontracts]
+  bkx STARTBLOCK ENDBLOCK --net=NETWORK [--logblocks --logcontracts --logtrans --logreceipts]
+  bkx FROMCURRENTBLOCK --net=NETWORK [--logblocks --logcontracts --logtrans --logreceipts]
 
 Options:
   -h --help         Show help
   -v --version      Show version
   --net=NETWORK     The network to use. (mainnet, rinkeby, local) [default: local]
-  --logtrans        Log summary of each processed transaction
   --logblocks       Log blocks
   --logcontracts    Log created contracts
+  --logtrans        Log summary of each processed transaction
+  --logreceipts     Log Transaction receipts
 `
 
 // JS implementation of POSIX arg parser http://docopt.org
