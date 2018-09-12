@@ -64,4 +64,4 @@ typings/
 secrets.env
 
 # truffle build
-tests/build
+solidity/build

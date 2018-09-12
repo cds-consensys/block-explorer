@@ -10,8 +10,7 @@ questions:
 4. A list of contract addresses that participated transactions
 5. Pct of Ether sent grouped by account type
 6. Pct of Ether received transactions grouped by account type
-7. How many contracts were created (seems to work on ganache networks, but not
-   mainnet nor rinkeby. Haven't tested the other testnets)
+7. How many contracts were created
 
 # Demo
 [![asciicast](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg.png)](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg)
@@ -22,15 +21,12 @@ questions:
      Owned Account and I'm not sure how to access the subsequent(embedded?)
      transfers that may be initiated just from web3's api.
 
- - Different behavior between ganache* vs mainnet and rinkeby for detecting when
-     a contract is created. According to
-     https://ethereum.stackexchange.com/a/29703/30050 Contract creation is
-     detected when the transaction's `to` field is null, however on ganache, the
-     `to` field is '0x0'. The implication is there may be other differences
-     depending on network and should be considered when processing.
-     - This is avoided by examining the transactionReceipt, which contains
-       the created contract address if one was created. It also informs whether
-       the transaction was accepted or rejected (reverted)
+ - Identifying different behavior between the implemention of the different networks.
+     Should a comparison engine be used for each network?  For example ganache*
+     vs (mainnet and rinkeby) differ in the value One in the implementation of
+     `getTransaction()`. The `status` attribute is:
+       - '0x01' on ganache
+       - '0x1' on  mainnet and rinkeby
 
 # Tools
 
@@ -108,7 +104,7 @@ going into the `tests` folder and enter the `trufle develop console` and
 invoking `test`
 
 ```sh
-$ cd tests
+$ cd solidity
 $ truffle develop
 
 truffle(develop)> test

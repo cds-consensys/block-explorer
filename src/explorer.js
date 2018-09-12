@@ -5,8 +5,8 @@ const addAccount = async (account, db, api) => {
   const isExternalyOwnedAccount = code === '0x' || code === '0x0'
   db.accounts[account] = {
     isExternalyOwnedAccount,
-    ethOut: api.toBigNumber('0'),
-    ethIn: api.toBigNumber('0')
+    ethOut: api.fnBigZero(),
+    ethIn: api.fnBigZero()
   }
 }
 
@@ -147,15 +147,15 @@ const blockQuery = async args => {
     accounts: {},
 
     // The total amount of Wei transferred in the specified range
-    totalTransferred: api.toBigNumber('0'),
+    totalTransferred: api.fnBigZero(),
 
     // Totals for External accounts
-    totalInExternals: api.toBigNumber('0'),
-    totalOutExternals: api.toBigNumber('0'),
+    totalInExternals: api.fnBigZero(),
+    totalOutExternals: api.fnBigZero(),
 
     // Totals for Contract accounts
-    totalInContracts: api.toBigNumber('0'),
-    totalOutContracts: api.toBigNumber('0'),
+    totalInContracts: api.fnBigZero(),
+    totalOutContracts: api.fnBigZero(),
 
     // Total contracts created
     contractsCreated: []

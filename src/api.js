@@ -10,22 +10,6 @@ const NETWORKS = {
   testing: 'http://localhost:9545'
 }
 
-// https://ethereum.stackexchange.com/questions/19092/why-was-rlp-chosen-as-the-low-level-protocol-encoding-algorithm
-// https://ethereum.stackexchange.com/a/46960/30050
-const getContractAddress = web3 => (sender, nonce) => {
-  // Use zero if nonce is naught, otherwise otherwise encoded nonce
-  // OR generated contract address for nonze zero is will not match
-  // what the EVM generates.
-  //
-  const input = [sender, nonce === 0 ? nonce : web3.toHex(nonce)]
-  const rlpEncoded = rlp.encode(input)
-
-  return keccak('keccak256')
-    .update(rlpEncoded)
-    .digest('hex')
-    .substring(24)
-}
-
 module.exports = args => {
   const network = NETWORKS[args['--net'].toLowerCase()]
   const web3 = new Web3(new Web3.providers.HttpProvider(network))
@@ -37,13 +21,14 @@ module.exports = args => {
   const getTransactionReceipt = promisify(
     web3.eth.getTransactionReceipt.bind(web3.eth)
   )
-  const toBigNumber = web3.toBigNumber
+
+  // Expose a way to get an zero valued instance of BigNumber
+  const fnBigZero = () => web3.toBigNumber('0')
 
   return {
     getCode,
     getBlock,
-    toBigNumber,
-    getContractAddress: getContractAddress(web3),
+    fnBigZero,
     getTransactionReceipt
   }
 }
