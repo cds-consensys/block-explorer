@@ -13,8 +13,7 @@ questions:
 7. How many contracts were created
 
 # Demo
-[![asciicast](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg.png)](https://asciinema.org/a/iW92M7R2NAlaKAdBL7cASS0vg)
-
+[![asciicast](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh.png)](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh)
 
 ## Concerns
  - Transfers from contracts to another address are initiated by an Externally
