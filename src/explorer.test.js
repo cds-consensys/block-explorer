@@ -2,11 +2,13 @@ const expect = require('chai').expect
 const explorer = require('./explorer.js')
 
 describe('explorer', () => {
-  // Somehow knowing the details of these two blocks...
+  // This test was constructed from a two block range using rinkeby etherscan
+  //   The 1st block has no transactions
+  //   https://rinkeby.etherscan.io/txs?block=2971555
   //
-  // A nice feature to request is to seed a development
-  // chain with transactions, and have it running so these
-  // types of tests would be easier
+  //   The 2nd block has only on non-cancelled transaction with value '.0580524' ether,
+  //   converted to wei is '58052400000000000'
+  //   https://rinkeby.etherscan.io/tx/0xcb7a2a20d6d130b90a7346242e5411d888ccc0a512cae0d6c68a0ed0dc42e3d7
   //
   describe('rinkeby tests verify range [2971555, 2971556]', () => {
     let db
@@ -60,41 +62,3 @@ describe('explorer', () => {
     })
   })
 })
-
-/*
-    accounts: {},
-
-    // Totals for External accounts
-    totalInExternals: api.toBigNumber('0'),
-    totalOutExternals: api.toBigNumber('0'),
-
-    // Totals for Contract accounts
-    totalInContracts: api.toBigNumber('0'),
-    totalOutContracts: api.toBigNumber('0'),
-
-    // Total contracts created
-    contractsCreated: []
-
-{ ENDBLOCK: 2971556,
-  STARTBLOCK: 2971555,
-  '--net': 'rinkeby',
-  hasConsole: true }
-Summary Report of Block Range [2971555, 2971556]
-
-0x2d23f4430be60a26299d0d41649b85526388a638                                   0 in                    58052400000000000 out      Externally Owned account
-0xfc4d7ad6ae2c4472de4440109c0df124b063df72                   58052400000000000 in                                    0 out      Contract account
-0x33431a099650116f6b3ec06c5744cef033207d91                                   0 in                                    1 out      Externally Owned account
-0x96d001e64ad65a5bd9c660801e4d2d14d2bf5155                                   1 in                                    0 out      Contract account
-All values in Wei
-Total ETH Transferred: 58052400000000001
-Total ETH sent by Externally Owned Accounts: 58052400000000001
-Total ETH sent by Contract Accounts: 0
-Total ETH received by Externally Owned Accounts: 0
-Total ETH received by Contract Accounts: 58052400000000001
-PCT Sent by Contract Accounts: 0.00
-PCT Sent by Externally Owned Accounts: 100.00
-PCT Received by Contract Accounts: 100.00
-PCT Received by Externally Owned Accounts: 0.00
-Total Contracts created: 0
-Done in  0.767  secs
-*/
