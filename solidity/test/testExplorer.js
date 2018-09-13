@@ -12,12 +12,11 @@ contract('TestExplorer blockQuery', ([acc1, acc2, acc3, ...rest]) => {
   before(async () => {
     actor = await Actor.new()
     await actor.send(1000, { from: acc1 })
-    // const result = await actor.sendTo(acc2, 500)
   })
 
   it('should find the total funds transferred', async () => {
     const db = await blockQuery(args)
-    assert.equal(db.totalTransferred.toNumber(10), 1000)
+    assert.equal(db.totalTransfer.toNumber(10), 1000)
   })
 
   it('should find the Contract account', async () => {

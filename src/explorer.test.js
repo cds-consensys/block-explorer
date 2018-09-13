@@ -12,7 +12,7 @@ describe('explorer', () => {
   //
   describe('rinkeby tests verify range [2971555, 2971556]', () => {
     let db
-    const expectedTotalTransferred = '58052400000000000'
+    const expectedTotalTransfer = '58052400000000000'
     const args = {
       STARTBLOCK: 2971555,
       ENDBLOCK: 2971556,
@@ -24,9 +24,7 @@ describe('explorer', () => {
     })
 
     it('calculates the total transferred ETH', async () => {
-      expect(db.totalTransferred.toString(10)).to.equal(
-        expectedTotalTransferred
-      )
+      expect(db.totalTransfer.toString(10)).to.equal(expectedTotalTransfer)
     })
 
     it('counts the number of contracts created', () => {
@@ -35,29 +33,27 @@ describe('explorer', () => {
 
     describe('for Externally Owned Accounts', () => {
       it('calculates the total ETH received', async () => {
-        expect(db.totalInExternals.toString(10)).to.equal('0')
-        expect(db.pctReceivedByExternals.toString(10)).to.equal('0.00')
+        expect(db.external.received.toString(10)).to.equal('0')
+        expect(db.external.receivedpct.toString(10)).to.equal('0.00')
       })
 
       it('calculates the total ETH sent', async () => {
-        expect(db.totalOutExternals.toString(10)).to.equal(
-          expectedTotalTransferred
-        )
-        expect(db.pctSentByExternals.toString(10)).to.equal('100.00')
+        expect(db.external.sent.toString(10)).to.equal(expectedTotalTransfer)
+        expect(db.external.sentpct.toString(10)).to.equal('100.00')
       })
     })
 
     describe('for Contract Accounts', () => {
       it('calculates the total ETH received', async () => {
-        expect(db.totalInContracts.toString(10)).to.equal(
-          expectedTotalTransferred
+        expect(db.internal.received.toString(10)).to.equal(
+          expectedTotalTransfer
         )
-        expect(db.pctReceivedByContracts.toString(10)).to.equal('100.00')
+        expect(db.internal.receivedpct.toString(10)).to.equal('100.00')
       })
 
       it('calculates the total ETH sent', async () => {
-        expect(db.totalOutContracts.toString(10)).to.equal('0')
-        expect(db.pctSentByContracts.toString(10)).to.equal('0.00')
+        expect(db.internal.sent.toString(10)).to.equal('0')
+        expect(db.internal.sentpct.toString(10)).to.equal('0.00')
       })
     })
   })

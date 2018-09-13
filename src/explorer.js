@@ -63,18 +63,18 @@ const parseTransactions = async (trans, db, api, options) => {
     // update accumulators
     db.accounts[accFrom].ethOut = db.accounts[accFrom].ethOut.plus(value)
     db.accounts[accTo].ethIn = db.accounts[accTo].ethIn.plus(value)
-    db.totalTransferred = db.totalTransferred.plus(value)
+    db.totalTransfer = db.totalTransfer.plus(value)
 
     if (db.accounts[accTo].isExternalyOwnedAccount) {
-      db.totalInExternals = db.totalInExternals.plus(value)
+      db.external.received = db.external.received.plus(value)
     } else {
-      db.totalInContracts = db.totalInContracts.plus(value)
+      db.internal.received = db.internal.received.plus(value)
     }
 
     if (db.accounts[accFrom].isExternalyOwnedAccount) {
-      db.totalOutExternals = db.totalOutExternals.plus(value)
+      db.external.sent = db.external.sent.plus(value)
     } else {
-      db.totalOutContracts = db.totalOutContracts.plus(value)
+      db.internal.sent = db.internal.sent.plus(value)
     }
 
     if (hasConsole && logtrans) {
@@ -91,17 +91,11 @@ const percentages = (portion, whole) =>
     .toString(10)
 
 const tallySummary = db => {
-  db.pctSentByContracts = percentages(db.totalOutContracts, db.totalTransferred)
-  db.pctSentByExternals = percentages(db.totalOutExternals, db.totalTransferred)
+  db.internal.sentpct = percentages(db.internal.sent, db.totalTransfer)
+  db.external.sentpct = percentages(db.external.sent, db.totalTransfer)
 
-  db.pctReceivedByContracts = percentages(
-    db.totalInContracts,
-    db.totalTransferred
-  )
-  db.pctReceivedByExternals = percentages(
-    db.totalInExternals,
-    db.totalTransferred
-  )
+  db.internal.receivedpct = percentages(db.internal.received, db.totalTransfer)
+  db.external.receivedpct = percentages(db.external.received, db.totalTransfer)
 }
 
 const getBlockRange = async (args, api) => {
@@ -147,15 +141,19 @@ const blockQuery = async args => {
     accounts: {},
 
     // The total amount of Wei transferred in the specified range
-    totalTransferred: api.fnBigZero(),
+    totalTransfer: api.fnBigZero(),
 
-    // Totals for External accounts
-    totalInExternals: api.fnBigZero(),
-    totalOutExternals: api.fnBigZero(),
+    // Totals for external accounts
+    external: {
+      received: api.fnBigZero(),
+      sent: api.fnBigZero()
+    },
 
     // Totals for Contract accounts
-    totalInContracts: api.fnBigZero(),
-    totalOutContracts: api.fnBigZero(),
+    internal: {
+      received: api.fnBigZero(),
+      sent: api.fnBigZero()
+    },
 
     // Total contracts created
     contractsCreated: []

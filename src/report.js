@@ -1,3 +1,21 @@
+const summary = db => {
+  const { internal, external } = db
+
+  const text = `
+All values in Wei
+Total ETH transferred: ${db.totalTransfer}
+  Sent:
+    Externally Owned Accounts: ${external.sent} (${external.sentpct} %)
+            Contract Accounts: ${internal.sent} (${db.internal.sentpct} %)
+  Received:
+    Externally Owned Accounts: ${external.received} (${external.receivedpct} %)
+            Contract Accounts: ${internal.received} (${internal.receivedpct} %)
+
+Total Contracts created: ${db.contractsCreated.length}
+`
+  console.log(text)
+}
+
 const lJustify = (str, length) => str.padStart(length, ' ')
 
 // Todo: if this grows more, find a logger or curses or chalky module
@@ -14,23 +32,7 @@ const display = db => {
     console.log(`${key}\t${ethIn} in\t${ethOut} out\t${accountType} account`)
   }
 
-  console.log('All values in Wei')
-  console.log(`Total ETH Transferred: ${db.totalTransferred}`)
-  console.log(
-    `Total ETH sent by Externally Owned Accounts: ${db.totalOutExternals}`
-  )
-  console.log(`Total ETH sent by Contract Accounts: ${db.totalOutContracts}`)
-  console.log(
-    `Total ETH received by Externally Owned Accounts: ${db.totalInExternals}`
-  )
-  console.log(`Total ETH received by Contract Accounts: ${db.totalInContracts}`)
-  console.log(`PCT Sent by Contract Accounts: ${db.pctSentByContracts}`)
-  console.log(`PCT Sent by Externally Owned Accounts: ${db.pctSentByExternals}`)
-  console.log(`PCT Received by Contract Accounts: ${db.pctReceivedByContracts}`)
-  console.log(
-    `PCT Received by Externally Owned Accounts: ${db.pctReceivedByExternals}`
-  )
-  console.log(`Total Contracts created: ${db.contractsCreated.length}`)
+  summary(db)
 }
 
 module.exports = {
