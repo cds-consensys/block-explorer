@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 const { blockQuery } = require('./explorer')
-const report = require('./report')
+const displayReport = require('./reporter')
 
 const neodoc = require('neodoc')
 const version = '0.0.1'
@@ -33,7 +33,7 @@ console.log(args)
 const startTime = Date.now()
 blockQuery(args)
   .then(db => {
-    report.display(db)
+    displayReport(db)
     const runTime = Date.now() - startTime
     console.log('Done in ', runTime / 1000, ' secs')
   })

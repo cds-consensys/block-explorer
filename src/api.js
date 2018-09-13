@@ -1,7 +1,5 @@
 const { promisify } = require('util')
 const Web3 = require('web3')
-const rlp = require('rlp')
-const keccak = require('keccak')
 
 const NETWORKS = {
   rinkeby: process.env.BKX_RINKEBY,

@@ -5,8 +5,10 @@ contract('TestExplorer blockQuery', ([acc1, acc2, acc3, ...rest]) => {
   let actor
   const args = {
     FROMCURRENTBLOCK: 1000,
-    '--logtrans': false,
     '--net': 'testing'
+    // enable to log transactions
+    // 'hasConsole': true,
+    // '--logtrans': true
   }
 
   before(async () => {

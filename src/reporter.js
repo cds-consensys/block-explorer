@@ -1,4 +1,6 @@
-const summary = db => {
+const lJustify = (str, length) => str.padStart(length, ' ')
+
+const logSummary = db => {
   const { internal, external } = db
 
   const text = `
@@ -16,11 +18,9 @@ Total Contracts created: ${db.contractsCreated.length}
   console.log(text)
 }
 
-const lJustify = (str, length) => str.padStart(length, ' ')
-
 // Todo: if this grows more, find a logger or curses or chalky module
 //
-const display = db => {
+module.exports = db => {
   const accounts = Object.keys(db.accounts)
   for (let key of accounts) {
     const account = db.accounts[key]
@@ -32,9 +32,5 @@ const display = db => {
     console.log(`${key}\t${ethIn} in\t${ethOut} out\t${accountType} account`)
   }
 
-  summary(db)
-}
-
-module.exports = {
-  display
+  logSummary(db)
 }

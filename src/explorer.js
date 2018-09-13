@@ -1,15 +1,3 @@
-const addAccount = async (account, db, api) => {
-  if (account in db.accounts) return
-
-  const code = await api.getCode(account)
-  const isExternalyOwnedAccount = code === '0x' || code === '0x0'
-  db.accounts[account] = {
-    isExternalyOwnedAccount,
-    ethOut: api.fnBigZero(),
-    ethIn: api.fnBigZero()
-  }
-}
-
 const getTransactionResults = async (hash, api, options) => {
   const { hasConsole, logreceipts } = options
   const receipt = await api.getTransactionReceipt(hash)
@@ -26,7 +14,7 @@ const getTransactionResults = async (hash, api, options) => {
   return { success, contractAddress }
 }
 
-const parseTransactions = async (trans, db, api, options) => {
+const parseTransactions = async (trans, ledger, api, options) => {
   const { logtrans, hasConsole, logcontracts } = options
   const compareAscending = (a, b) => a.transactionIndex - b.transactionIndex
   trans.sort(compareAscending)
@@ -35,13 +23,19 @@ const parseTransactions = async (trans, db, api, options) => {
     const { from: accFrom, to: accTo, value, nonce, hash } = tx
     const header = `Blk[${tx.blockNumber}]:tx(${tx.transactionIndex})`
 
-    const txResult = await getTransactionResults(hash, api, options)
-    const { success, contractAddress } = txResult
+    // const txResult = await getTransactionResults(hash, api, options)
+    // const { success, contractAddress } = txResult
+
+    const { success, contractAddress } = await getTransactionResults(
+      hash,
+      api,
+      options
+    )
 
     if (!success) continue
 
     if (contractAddress) {
-      db.contractsCreated.push(contractAddress)
+      ledger.addContract(contractAddress)
 
       if (logcontracts) {
         console.log(`${header}: Contract address created: ${contractAddress}`)
@@ -57,45 +51,12 @@ const parseTransactions = async (trans, db, api, options) => {
       continue
     }
 
-    await addAccount(accFrom, db, api)
-    await addAccount(accTo, db, api)
-
-    // update accumulators
-    db.accounts[accFrom].ethOut = db.accounts[accFrom].ethOut.plus(value)
-    db.accounts[accTo].ethIn = db.accounts[accTo].ethIn.plus(value)
-    db.totalTransfer = db.totalTransfer.plus(value)
-
-    if (db.accounts[accTo].isExternalyOwnedAccount) {
-      db.external.received = db.external.received.plus(value)
-    } else {
-      db.internal.received = db.internal.received.plus(value)
-    }
-
-    if (db.accounts[accFrom].isExternalyOwnedAccount) {
-      db.external.sent = db.external.sent.plus(value)
-    } else {
-      db.internal.sent = db.internal.sent.plus(value)
-    }
+    await ledger.addTransaction(accFrom, accTo, value, options)
 
     if (hasConsole && logtrans) {
       console.log(`${header}: ${accFrom} -> ${accTo}: ${value} Wei`)
     }
   }
-}
-
-const percentages = (portion, whole) =>
-  portion
-    .dividedBy(whole)
-    .times(100)
-    .toFixed(2)
-    .toString(10)
-
-const tallySummary = db => {
-  db.internal.sentpct = percentages(db.internal.sent, db.totalTransfer)
-  db.external.sentpct = percentages(db.external.sent, db.totalTransfer)
-
-  db.internal.receivedpct = percentages(db.internal.received, db.totalTransfer)
-  db.external.receivedpct = percentages(db.external.received, db.totalTransfer)
 }
 
 const getBlockRange = async (args, api) => {
@@ -113,10 +74,10 @@ const getBlockRange = async (args, api) => {
   }
   return [start, end]
 }
-
 const blockQuery = async args => {
   // Bootstrap API from args
   const api = require('./api')(args)
+  const ledger = require('./ledger')(api)
 
   const [startBlock, endBlock] = await getBlockRange(args, api)
   let blockNum = startBlock
@@ -132,39 +93,12 @@ const blockQuery = async args => {
   // local options
   const logblocks = args['--logblocks']
 
-  // Data store of interesting accumulated data
-  const db = {
-    // account -> accountbook.
-    // The book accumulates payouts and pay-ins as well as account type: Externally
-    // Owned, or contract
-    //
-    accounts: {},
-
-    // The total amount of Wei transferred in the specified range
-    totalTransfer: api.fnBigZero(),
-
-    // Totals for external accounts
-    external: {
-      received: api.fnBigZero(),
-      sent: api.fnBigZero()
-    },
-
-    // Totals for Contract accounts
-    internal: {
-      received: api.fnBigZero(),
-      sent: api.fnBigZero()
-    },
-
-    // Total contracts created
-    contractsCreated: []
-  }
-
   do {
     try {
       const block = await api.getBlock(blockNum++, true)
       logblocks && console.log('block', JSON.stringify(block, null, 2))
 
-      await parseTransactions(block.transactions, db, api, options)
+      await parseTransactions(block.transactions, ledger, api, options)
     } catch (error) {
       console.error(error)
       return { error }
@@ -174,8 +108,10 @@ const blockQuery = async args => {
   args.hasConsole &&
     console.log(`Summary Report of Block Range [${startBlock}, ${endBlock}]\n`)
 
-  tallySummary(db)
-  return db
+  ledger.finalize()
+
+  // oh boy
+  return ledger.db
 }
 
 module.exports = {
