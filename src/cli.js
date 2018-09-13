@@ -6,7 +6,8 @@ const neodoc = require('neodoc')
 const version = '0.0.1'
 
 const doc = `
-Blockchain explorer tool to study that ETH velocity.
+Blockchain explorer tool to study ETH velocity.
+https://goo.gl/r7w991
 
 Usage:
   bkx STARTBLOCK ENDBLOCK --net=NETWORK [--logblocks --logcontracts --logtrans --logreceipts]
@@ -29,15 +30,17 @@ const args = neodoc.run(doc, { version })
 args.hasConsole = true
 console.log(args)
 
-try {
-  const startTime = Date.now()
-  blockQuery(args).then(db => {
+const startTime = Date.now()
+blockQuery(args)
+  .then(db => {
     report.display(db)
     const runTime = Date.now() - startTime
     console.log('Done in ', runTime / 1000, ' secs')
-    process.exit()
   })
-} catch (error) {
-  console.log(error)
-  process.exit()
-}
+  .catch(error => {
+    console.log('Oh noes! Something went wrong!')
+    console.log(error)
+    console.log('\n'.repeat(3))
+    console.log(`Did you export your infura endpoints to the environment? `)
+    console.log(`\tInstructions: https://goo.gl/5V4fNs`)
+  })
