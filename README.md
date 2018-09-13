@@ -21,7 +21,7 @@ questions:
    Machine. As of now, I haven't figured out how to solve this technical
    problem; it's a research and work in progress.
 
- - Identifying different behavior between the implemention of the different networks.
+ - Identifying different implementation behavior of the different networks.
      Should a comparison engine be used for each network?  For example ganache*
      vs (mainnet and rinkeby) differ in the value One in the implementation of
      `getTransaction()`. The `status` attribute is:
@@ -31,9 +31,6 @@ questions:
  - My lack of knowledge of current best practices and work flow in this space.
    This as an opportunity to investigate the developer flow as well as
    developing the simple blockchain explorer.
-
- - Unknown network compatibility issues. Are blocks and transactions structured
-   and encoded identically? Something to keep in mind
 
 # Demo
 
