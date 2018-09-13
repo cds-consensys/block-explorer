@@ -12,13 +12,14 @@ questions:
 6. Pct of Ether received transactions grouped by account type
 7. How many contracts were created
 
-# Demo
-[![asciicast](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh.png)](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh)
-
-## Concerns
- - Transfers from contracts to another address are initiated by an Externally
-     Owned Account and I'm not sure how to access the subsequent(embedded?)
-     transfers that may be initiated just from web3's api.
+# Challenges
+ - All transfers are initiated by an externally owned account, ie one with
+   a private key. However Ether can be transferred from Smart contracts as well.
+   Those smart contract sends are not captured in the transaction, or transaction records,
+   exposed by Web3. They can be calculated by executing the smart contract code,
+   with the inputs in the transaction against the current state of the Ethereum
+   Machine. As of now, I haven't figured out how to solve this technical
+   problem; it's a research and work in progress.
 
  - Identifying different behavior between the implemention of the different networks.
      Should a comparison engine be used for each network?  For example ganache*
@@ -26,6 +27,21 @@ questions:
      `getTransaction()`. The `status` attribute is:
        - '0x01' on ganache
        - '0x1' on  mainnet and rinkeby
+
+ - My lack of knowledge of current best practices and work flow in this space.
+   This as an opportunity to investigate the developer flow as well as
+   developing the simple blockchain explorer.
+
+ - Unknown network compatibility issues. Are blocks and transactions structured
+   and encoded identically? Something to keep in mind
+
+# Demo
+
+View the demo below. You can use the player scrubber to fast forward; no one
+should be held hostage waiting for web requests to complete. A fun fact about
+asciinema casts is you can cut and paste text from the player!
+
+[![asciicast](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh.png)](https://asciinema.org/a/500jnrDaC9e4lsLpPP5ihAZFh)
 
 # Tools
 
@@ -74,7 +90,8 @@ $ source ./secrets.env
 ## Mocha tests
 
 Some tests require mainnet or rinkeby access.
-__Don't forget to source your secrets.env file to set infura endpoints!__
+
+__Don't forget to source your secrets.env file to [set Infura endpoints](#environment-variables)!__
 
 ```sh
 $ npm test
@@ -120,17 +137,6 @@ truffle(develop)>
 ```
 
 
-## Thoughts
-
-I'm still researching best practices and took this as an opportunity to
-investigate the developer flow as much as developing the simple blockchain
-explorer. The only guide I have is to structure the explorer as an API that both
-the command line interface and the test client utilize.
-
-__Unknowns__
- - Compatibilities in the different networks. Are blocks and transactions
-   structured and encoded identically?
-
 # Program help
 
 This project utilizes [neodoc](https://felixschl.github.io/neodoc/#/?_k=jq4bnh),
@@ -142,7 +148,8 @@ messages and man pages for describing a program's interface.
 
 $ bkx -h
 
-Blockchain explorer tool to study that ETH velocity.
+Blockchain explorer tool to study ETH velocity.
+https://goo.gl/r7w991
 
 Usage:
   bkx STARTBLOCK ENDBLOCK --net=NETWORK [--logblocks --logcontracts --logtrans --logreceipts]
@@ -160,7 +167,7 @@ Options:
 
 ## Examples
 
-__Don't forget to set your environment variables!__
+__Don't forget to source your secrets.env file to [set Infura endpoints](#environment-variables)!__
 
 1. Explore rinkeby starting 10 blocks from `latest`
    ```sh
