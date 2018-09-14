@@ -1,11 +1,26 @@
 const getTransactionResults = async (hash, api, options) => {
   const { hasConsole, logreceipts } = options
-  const { status, contractAddress } = await api.getTransactionReceipt(hash)
+  const receipt = await api.getTransactionReceipt(hash)
+
   if (logreceipts && hasConsole) {
     console.log('Transaction hash')
     console.log(JSON.stringify(receipt, null, 2))
     console.log('*****\n')
   }
+
+  // Todo:
+  // 1. what does it mean if receipt is null or undefined? Does web3
+  //    guarantee to never return null or undefined?
+  // 2. This question should be resolved by our exposed api layer
+  // 3. Enforce checks on other exposed/wrapped web3 endpoints. Where there's
+  //    one there's three
+  if (receipt === null || receipt === undefined) {
+    // Err on the sid of caution and swallow error
+    return { success: false, contractAddress: null }
+  }
+
+  const { status, contractAddress } = receipt
+
   // mainnet and rinkeby use status '0x1'
   // ganache uses '0x01'
   const success = status === '0x01' || status === '0x1'
