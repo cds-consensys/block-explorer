@@ -1,8 +1,7 @@
 {
   "name": "block-explorer",
   "version": "1.0.0",
-  "description":
-    "This block explorer is a command line tool to display ad-hoc blockchain data over a given range of blocks. In that range it will answer basic account questions:",
+  "description": "Display ad-hoc blockchain data over a given range of blocks",
   "main": "./src/cli.js",
   "directories": {
     "test": "tests"
@@ -26,11 +25,9 @@
   "homepage": "https://github.com/cds-consensys/block-explorer#readme",
   "dependencies": {
     "chai": "^4.1.2",
-    "keccak": "^1.4.0",
     "mocha": "^5.2.0",
     "neodoc": "^2.0.2",
     "promisify": "0.0.3",
-    "rlp": "^2.1.0",
     "web3": "^0.20.6"
   }
 }
