@@ -21,7 +21,6 @@ describe('explorer', () => {
 
     before(async () => {
       db = await explorer.blockQuery(args)
-      // console.log('db', JSON.stringify(db, null, 2))
     })
 
     it('calculates the total transferred ETH', async () => {

@@ -38,11 +38,9 @@ class Ledger {
 
   addContract(address) {
     this.db.contractsCreated.push(address)
-    // console.log('contract added', address)
   }
 
   async addAccount(account) {
-    // console.log('addAccount...')
     if (account in this.db.accounts) return
 
     const code = await this.api.getCode(account)
@@ -53,7 +51,6 @@ class Ledger {
       ethOut: this.api.fnBigZero(),
       ethIn: this.api.fnBigZero()
     }
-    // console.log('...entry', entry)
     this.db.accounts[account] = entry
   }
 

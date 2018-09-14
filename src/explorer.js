@@ -1,12 +1,10 @@
 const getTransactionResults = async (hash, api, options) => {
   const { hasConsole, logreceipts } = options
-  const receipt = await api.getTransactionReceipt(hash)
-  const { status, contractAddress } = receipt
+  const { status, contractAddress } = await api.getTransactionReceipt(hash)
   if (logreceipts && hasConsole) {
-    console.group('Transaction hash')
+    console.log('Transaction hash')
     console.log(JSON.stringify(receipt, null, 2))
     console.log('*****\n')
-    console.groupEnd()
   }
   // mainnet and rinkeby use status '0x1'
   // ganache uses '0x01'
