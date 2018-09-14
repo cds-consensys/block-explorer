@@ -23,8 +23,8 @@ const parseTransactions = async (trans, ledger, api, options) => {
     const { from: accFrom, to: accTo, value, nonce, hash } = tx
     const header = `Blk[${tx.blockNumber}]:tx(${tx.transactionIndex})`
 
-    // const txResult = await getTransactionResults(hash, api, options)
-    // const { success, contractAddress } = txResult
+    // force log all transactions
+    // console.log(`${header}: ${accFrom} -> ${accTo}: ${value} Wei`)
 
     const { success, contractAddress } = await getTransactionResults(
       hash,
@@ -60,26 +60,26 @@ const parseTransactions = async (trans, ledger, api, options) => {
 }
 
 const getBlockRange = async (args, api) => {
-  let start = args.STARTBLOCK
-  let end = args.ENDBLOCK
+  let startBlock = args.STARTBLOCK
+  let endBlock = args.ENDBLOCK
 
   const latestBlock = await api.getBlock('latest')
 
   if (args.FROMCURRENTBLOCK) {
-    end = latestBlock.number
-    start = end - args.FROMCURRENTBLOCK
-    if (start < 0) start = 0
-  } else if (end === 'latest') {
-    end = latestBlock.number
+    endBlock = latestBlock.number
+    startBlock = endBlock - args.FROMCURRENTBLOCK
+    if (startBlock < 0) startBlock = 0
+  } else if (endBlock === 'latest') {
+    endBlock = latestBlock.number
   }
-  return [start, end]
+  return { startBlock, endBlock }
 }
 const blockQuery = async args => {
   // Bootstrap API from args
   const api = require('./api')(args)
   const ledger = require('./ledger')(api)
 
-  const [startBlock, endBlock] = await getBlockRange(args, api)
+  const { startBlock, endBlock } = await getBlockRange(args, api)
   let blockNum = startBlock
 
   // options to pass on
