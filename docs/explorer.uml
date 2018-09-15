@@ -1,0 +1,51 @@
+
+            ┌───┐             ┌────────┐                                         ┌───┐          ┌────────┐
+            │Cli│             │Explorer│                                         │API│          │Reporter│
+            └─┬─┘             └───┬────┘                                         └─┬─┘          └───┬────┘
+              │ tally [start, end]│                                                │                │
+              │  ─ ─ ─ ─ ─ ─ ─ ─ ─>                                                │                │
+              │                   │                                                │                │
+              │                   │           request Blocks [start, end]          │                │
+              │                   │ ───────────────────────────────────────────────>                │
+              │                   │                                                │                │
+              │                   │                                                │                │
+          ╔═══╪═══╤═══════════════╪════════════════════════════════════════════════╪════════════════╪════╗
+          ║ LOOP  │  over all blocks in [start, end]                               │                │    ║
+          ╟───────┘               │                                                │                │    ║
+          ║   │                   │                                                │                │    ║
+          ║   │     ╔═════════════╤════════════════════════════════════════════════╪═══════════╗    │    ║
+          ║   │     ║ ACCOUNTING  │                                                │           ║    │    ║
+          ║   │     ╟─────────────┘                      block                     │           ║    │    ║
+          ║   │     ║             │ <───────────────────────────────────────────────           ║    │    ║
+          ║   │     ║             │                                                │           ║    │    ║
+          ║   │     ║             │────┐                                                       ║    │    ║
+          ║   │     ║             │    │ update Ledger for all transactions in block           ║    │    ║
+          ║   │     ║             │<───┘                                                       ║    │    ║
+          ║   │     ╚═════════════╪════════════════════════════════════════════════╪═══════════╝    │    ║
+          ╚═══╪═══════════════════╪════════════════════════════════════════════════╪════════════════╪════╝
+              │                   │                                                │                │
+              │       Ledger      │                                                │                │
+              │ <─ ─ ─ ─ ─ ─ ─ ─ ─                                                 │                │
+              │                   │                                                │                │
+              │                   │                display Ledger                  │                │
+              │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─>
+            ┌─┴─┐             ┌───┴────┐                                         ┌─┴─┐          ┌───┴────┐
+            │Cli│             │Explorer│                                         │API│          │Reporter│
+            └───┘             └────────┘                                         └───┘          └────────┘
+
+@startuml
+Cli --> Explorer : tally [start, end]
+
+Explorer -> API : request Blocks [start, end]
+loop over all blocks in [start, end]
+  group Accounting
+    API -> Explorer : block
+    Explorer -> Explorer: update Ledger for all transactions in block
+  end
+end
+
+Cli <-- Explorer: Ledger
+Cli --> Reporter: display Ledger
+
+@enduml
+

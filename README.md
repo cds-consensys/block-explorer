@@ -7,13 +7,18 @@ questions:
 1. How much ether was transferred
 2. Which addresses received ether and total did they received
 3. Which addresses sent ether and the total they sent
-4. A list of contract addresses that participated transactions
-5. Pct of Ether sent grouped by account type
-6. Pct of Ether received transactions grouped by account type
-7. How many contracts were created
+4. A list of contract addresses that participated in transactions
+5. Percentage of Ether sent grouped by account type
+6. Percentage of Ether received transactions grouped by account type
+7. Total contracts created
 
-# Challenges
- - All transfers are initiated by an externally owned account, ie one with
+
+# Design
+  Please refer to the [design document](./docs/design.md) for a high level
+  overview.
+
+## Challenges
+ - All transfers are initiated by an externally owned account, ie, one with
    a private key. However Ether can be transferred from Smart contracts as well.
    Those smart contract sends are not captured in the transaction, or transaction records,
    exposed by Web3. They can be calculated by executing the smart contract code,
@@ -21,7 +26,7 @@ questions:
    Machine. As of now, I haven't figured out how to solve this technical
    problem; it's a research and work in progress.
 
- - Identifying different implementation behavior of the different networks.
+ - Identifying implementation behavior differences of the different networks.
      Should a comparison engine be used for each network?  For example ganache*
      vs (mainnet and rinkeby) differ in the value One in the implementation of
      `getTransaction()`. The `status` attribute is:
@@ -29,8 +34,9 @@ questions:
        - '0x1' on  mainnet and rinkeby
 
  - My lack of knowledge of current best practices and work flow in this space.
-   This as an opportunity to investigate the developer flow as well as
+   This is an opportunity to investigate the developer flow as well as
    developing the simple blockchain explorer.
+
 
 # Demo
 
@@ -42,7 +48,7 @@ asciinema casts is you can cut and paste text from the player!
 
 # Tools
 
-This project was build using node 9.11.2 and includes an .nvmrc if you happen
+This project was build using node 9.11.2 and includes an `.nvmrc` if you happen
 to use nvm.
 
 # Build
@@ -57,7 +63,7 @@ Clone the repo and build
 # Installation
 
 Link the project to get access to the commandline interface. Linking will not be
-the future when this project is published.
+necessary in the future when this project is published.
 
 __This must be
 done from the root folder of the project where `package.json` resides.__
