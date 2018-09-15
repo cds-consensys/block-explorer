@@ -24,7 +24,7 @@ created.
 
 Displays a report for the user. It uses the Ledger created by the Explorer.
 
-[Sequence Diagram](./docs/explorer.uml)
+[Sequence Diagram](./sequence.uml)
 
             ┌───┐             ┌────────┐                                         ┌───┐          ┌────────┐
             │Cli│             │Explorer│                                         │API│          │Reporter│
