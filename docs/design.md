@@ -24,16 +24,14 @@ suggests that a solution is to create an instrumented Ethereum VM.
 ## Network implementation differences
 
 There is possibility of implementation differences across blockchain
-    networks.  For example ganache* vs (mainnet and rinkeby) differ in the
-    value One in the implementation of `getTransaction()`. The `status` attribute is:
-       - '0x01' on ganache
-       - '0x1' on  mainnet and rinkeby
+    networks.  For example `getTransaction()` returns an object with the
+    property `status: '0x01'` on a ganache network while mainnet and rinkeby
+    return the object with `status: '0x1'`
 
 ### Work around
-  - Constrain web3 access to one module isolating concerns there. This module
-    will expose a limited web3 API interface to interact with the different
+  - Constrain Web3 access to one module isolating concerns there. This module
+    will expose a limited Web3 API interface to interact with the different
     block chains.
-
 
  - Lack of knowledge of current best practices and work flow in this space.
    This is an opportunity to investigate the developer flow as well as
@@ -65,39 +63,49 @@ created.
 
 Displays a report for the user. It uses the Ledger created by the Explorer.
 
-[Sequence Diagram](./sequence.uml)
+----
 
-            ┌───┐             ┌────────┐                                         ┌───┐          ┌────────┐
-            │Cli│             │Explorer│                                         │API│          │Reporter│
-            └─┬─┘             └───┬────┘                                         └─┬─┘          └───┬────┘
-              │ tally [start, end]│                                                │                │
-              │  ─ ─ ─ ─ ─ ─ ─ ─ ─>                                                │                │
-              │                   │                                                │                │
-              │                   │           request Blocks [start, end]          │                │
-              │                   │ ───────────────────────────────────────────────>                │
-              │                   │                                                │                │
-              │                   │                                                │                │
-          ╔═══╪═══╤═══════════════╪════════════════════════════════════════════════╪════════════════╪════╗
-          ║ LOOP  │  over all blocks in [start, end]                               │                │    ║
+# Sequence diagram
+
+This diagram shows how a user's request to summarize transactions of blocks 6M to 6M+1
+flows through the system. The UML source is located [here](./sequence.uml)
+```
+
+              ┌───┐           ┌────────┐                                         ┌───┐          ┌────────┐
+              │Cli│           │Explorer│                                         │API│          │Reporter│
+              └─┬─┘           └───┬────┘                                         └─┬─┘          └───┬────┘
+   bkx 6M 6M+1  │                 │                                                │                │
+ ───────────────>                 │                                                │                │
+                │                 │                                                │                │
+                │ track [6M, 6M+1]│                                                │                │
+                │  ─ ─ ─ ─ ─ ─ ─ ─>                                                │                │
+                │                 │                                                │                │
+                │                 │            request Blocks [6M, 6M+1]           │                │
+                │                 │ ───────────────────────────────────────────────>                │
+                │                 │                                                │                │
+                │                 │                                                │                │
+          ╔═════╪═╤═══════════════╪════════════════════════════════════════════════╪════════════════╪════╗
+          ║ LOOP  │  over all blocks in range                                      │                │    ║
           ╟───────┘               │                                                │                │    ║
-          ║   │                   │                                                │                │    ║
-          ║   │     ╔═════════════╤════════════════════════════════════════════════╪═══════════╗    │    ║
-          ║   │     ║ ACCOUNTING  │                                                │           ║    │    ║
-          ║   │     ╟─────────────┘                      block                     │           ║    │    ║
-          ║   │     ║             │ <───────────────────────────────────────────────           ║    │    ║
-          ║   │     ║             │                                                │           ║    │    ║
-          ║   │     ║             │────┐                                                       ║    │    ║
-          ║   │     ║             │    │ update Ledger for all transactions in block           ║    │    ║
-          ║   │     ║             │<───┘                                                       ║    │    ║
-          ║   │     ╚═════════════╪════════════════════════════════════════════════╪═══════════╝    │    ║
-          ╚═══╪═══════════════════╪════════════════════════════════════════════════╪════════════════╪════╝
-              │                   │                                                │                │
-              │       Ledger      │                                                │                │
-              │ <─ ─ ─ ─ ─ ─ ─ ─ ─                                                 │                │
-              │                   │                                                │                │
-              │                   │                display Ledger                  │                │
-              │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─>
-            ┌─┴─┐             ┌───┴────┐                                         ┌─┴─┐          ┌───┴────┐
-            │Cli│             │Explorer│                                         │API│          │Reporter│
-            └───┘             └────────┘                                         └───┘          └────────┘
+          ║     │                 │                                                │                │    ║
+          ║     │   ╔═════════════╤════════════════════════════════════════════════╪═══════════╗    │    ║
+          ║     │   ║ ACCOUNTING  │                                                │           ║    │    ║
+          ║     │   ╟─────────────┘                      block                     │           ║    │    ║
+          ║     │   ║             │ <───────────────────────────────────────────────           ║    │    ║
+          ║     │   ║             │                                                │           ║    │    ║
+          ║     │   ║             │────┐                                                       ║    │    ║
+          ║     │   ║             │    │ update Ledger for all transactions in block           ║    │    ║
+          ║     │   ║             │<───┘                                                       ║    │    ║
+          ║     │   ╚═════════════╪════════════════════════════════════════════════╪═══════════╝    │    ║
+          ╚═════╪═════════════════╪════════════════════════════════════════════════╪════════════════╪════╝
+                │                 │                                                │                │
+                │      Ledger     │                                                │                │
+                │ <─ ─ ─ ─ ─ ─ ─ ─                                                 │                │
+                │                 │                                                │                │
+                │                 │                     Ledger                     │                │
+                │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─>
+              ┌─┴─┐           ┌───┴────┐                                         ┌─┴─┐          ┌───┴────┐
+              │Cli│           │Explorer│                                         │API│          │Reporter│
+              └───┘           └────────┘                                         └───┘          └────────┘
 
+```
