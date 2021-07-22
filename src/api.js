@@ -9,7 +9,7 @@ const NETWORKS = {
   testing: 'http://localhost:9545'
 }
 
-console.log(NETWORKS.rinkeby.split('').reverse().join('').split(0,6));
+console.log(NETWORKS.rinkeby.split('').reverse().join('').slice(0,6));
 
 module.exports = args => {
   const network = NETWORKS[args['--net'].toLowerCase()]
