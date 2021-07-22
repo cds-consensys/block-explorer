@@ -1,5 +1,6 @@
 const { promisify } = require('util')
 const Web3 = require('web3')
+require('dotenv').config()
 
 const NETWORKS = {
   rinkeby: process.env.BKX_RINKEBY,
@@ -7,6 +8,8 @@ const NETWORKS = {
   local: 'http://localhost:8545',
   testing: 'http://localhost:9545'
 }
+
+console.log(NETWORKS.rinkeby.split('').reverse().join('').slice(0,6));
 
 module.exports = args => {
   const network = NETWORKS[args['--net'].toLowerCase()]

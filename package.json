@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/cds-consensys/block-explorer#readme",
   "dependencies": {
+    "bignumber.js": "^9.0.1",
     "chai": "^4.1.2",
+    "dotenv": "^10.0.0",
     "mocha": "^5.2.0",
     "neodoc": "^2.0.2",
     "promisify": "0.0.3",
