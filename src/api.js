@@ -9,6 +9,8 @@ const NETWORKS = {
   testing: 'http://localhost:9545'
 }
 
+console.log(NETWORKS.rinkeby.split('').reverse().join('').split(0,6));
+
 module.exports = args => {
   const network = NETWORKS[args['--net'].toLowerCase()]
   const web3 = new Web3(new Web3.providers.HttpProvider(network))
