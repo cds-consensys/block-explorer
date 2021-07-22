@@ -1,5 +1,6 @@
 const { promisify } = require('util')
 const Web3 = require('web3')
+require('dotenv').config()
 
 const NETWORKS = {
   rinkeby: process.env.BKX_RINKEBY,
