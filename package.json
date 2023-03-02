@@ -25,7 +25,7 @@
   "homepage": "https://github.com/cds-consensys/block-explorer#readme",
   "dependencies": {
     "chai": "^4.1.2",
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "neodoc": "^2.0.2",
     "promisify": "0.0.3",
     "web3": "^0.20.6"
